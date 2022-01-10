@@ -1,5 +1,4 @@
 import numpy as np
-import librosa
 from scipy.signal import find_peaks
 import statistics as st
 
@@ -13,7 +12,6 @@ def remove_unvoiced(y, samples, frame_len):
     for i in range(len(samples)):
         if int(samples[i]) == 0: # from index to index+frame_len is unvoiced
             unvoiced_pos.append(index)
-            #y = np.append(y[0:index], y[index+frame_len:])
             unvoiced_win.append(win_no)
         else:
             y1.append(list(y[index:index+frame_len]))
@@ -104,7 +102,6 @@ def divide_into_segments(samples):
                 frame_nos.append(i)
                 temp_pitch.append(samples[i])
             mean = st.mean(temp_pitch)
-            #median = st.median(temp_pitch)
         else:
             if len(frame_nos) != 0:
                 segment_frames[segment_no] = frame_nos.copy()
@@ -176,14 +173,7 @@ def overlap_add_with_new_pitch(seg_frames, seg_pitch, desired_pitch, seg_len):
     if last_pos < seg_len:
         diff = seg_len - last_pos
         temp_vec[last_pos:seg_len] = temp_vec[last_pos-diff:last_pos]
-    '''
-    last_frame = i-2
-    i += 1
-    while last_pos < seg_len:
-        temp_vec[i*shift:i*shift + frame_len] = temp_vec[i*shift:i*shift + frame_len] + seg_frames[last_frame]
-        last_pos = i * shift + frame_len
-        i += 1
-    '''
+
     seg_vec = temp_vec[0:seg_len]
     return seg_vec
 

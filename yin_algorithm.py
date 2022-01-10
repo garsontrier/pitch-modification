@@ -1,8 +1,7 @@
 import numpy as np
-import math
-import librosa
 
-#this code is taken from github
+
+#this code is taken from: https://github.com/amackillop/pyYIN
 
 # ### Yin pitch tracking algorithm
 
@@ -10,7 +9,6 @@ def divide_into_frames(y, frame_size, frame_stride, fs):
     frame_len = int(fs * frame_size)  # number of samples in a single frame
     frame_step = int(fs * frame_stride)  # number of overlapping samples
     total_frames = int(np.ceil(float(np.abs(len(y) - frame_len)) / frame_step))
-    #print("Frame len %d, frame step %d, total frames %d" % (frame_len, frame_step, total_frames))
     if frame_len * total_frames > len(y):
         padded_y = np.append(np.array(y), np.zeros(frame_len * total_frames - len(y)))
     else:
@@ -18,7 +16,7 @@ def divide_into_frames(y, frame_size, frame_stride, fs):
     framed_y = np.zeros((total_frames, frame_len))
     for i in range(total_frames): # rectangular win
         framed_y[i] = padded_y[i * frame_step: i * frame_step + frame_len]
-    #print(framed_y.shape)
+
     return framed_y
 
 
@@ -80,7 +78,7 @@ def yin_pitchtracker(y, frame_size, frame_step, sr):
             pitch = 0
         else:
             pitch = sr / new_tau
-        # print (pitch)
+
         if pitch >= 0:
             pitches.append(pitch)
     return pitches
